@@ -24,9 +24,18 @@ contract EcommerceStore {
     
 
     
-    function addProductToStore(string _name, string _category , string _imageLink , string _descLink , uint _startTime , uint _price , uint _productCondition)
+    function addProductToStore(string _name, string _category , string _imageLink , string _descLink , uint _startTime , uint _price , uint _productCondition) public
     {
         productIndex+=1;
-        Product product = Product(productIndex, _name,  _category,  _imageLink,  _descLink,  _startTime, _price, ProductCondition(_productCondition),0 );
+        Product memory product = Product(productIndex, _name,  _category,  _imageLink,  _descLink,  _startTime, _price, ProductCondition(_productCondition),0 );
+        stores[msg.sender][productIndex] = product;
+        productIdInStore[productIndex] = msg.sender;
+    }
+    
+    function getProduct(uint _productId) public view returns(uint,string,string,string,string,uint,uint,ProductCondition,address)
+    {
+        Product memory product = stores[productIdInStore[_productId]][_productId];
+        return (product.id, product.name,  product.category,  product.imageLink,  product.descLink,  product.startTime, product.price,
+        product.condition,product.buyer);
     }
 }
